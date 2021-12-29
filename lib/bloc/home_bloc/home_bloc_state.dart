@@ -1,29 +1,20 @@
-part of 'home_bloc_cubit.dart';
+import 'package:flutter/foundation.dart';
+import 'package:majootestcase/models/movie_response.dart';
 
+@immutable
+abstract class HomeBlocState {}
 
-abstract class HomeBlocState extends Equatable {
-  const HomeBlocState();
+class HomeBlocInitialState extends HomeBlocState {}
 
-  @override
-    List<Object> get props => [];
-}
-
-class HomeBlocInitialState extends HomeBlocState { }
-
-class HomeBlocLoadingState extends HomeBlocState { }
+class HomeBlocLoadingState extends HomeBlocState {}
 
 class HomeBlocLoadedState extends HomeBlocState {
-    final List<Data> data;
-    HomeBlocLoadedState(this.data);
-    @override
-    List<Object> get props => [data];
+  final MovieResponse data;
+  HomeBlocLoadedState(this.data);
 }
 
 class HomeBlocErrorState extends HomeBlocState {
-    final error;
+  final String message;
 
-    HomeBlocErrorState(this.error);
-
-    @override
-    List<Object> get props => [error];
+  HomeBlocErrorState({this.message});
 }

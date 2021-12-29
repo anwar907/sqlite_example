@@ -1,16 +1,16 @@
 import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 Dio dioInstance;
 createInstance() async {
-
   var options = BaseOptions(
       baseUrl: "https://imdb8.p.rapidapi.com/auto-complete?q=game%20of%20thr",
-      connectTimeout: 12000,
-      receiveTimeout: 12000,
+      connectTimeout: 10000,
+      receiveTimeout: 10000,
       headers: {
-        "x-rapidapi-key": "6af4f77398mshb3f6cd027729468p1d6d31jsn038947888a17",
+        "x-rapidapi-key": "a3599a5e1cmshbe0d46373b97767p104511jsn962a7b024b09",
         "x-rapidapi-host": "imdb8.p.rapidapi.com"
       });
   dioInstance = new Dio(options);
@@ -22,12 +22,11 @@ createInstance() async {
       error: true,
       compact: true,
       maxWidth: 90));
-
 }
 
 Future<Dio> dio() async {
   await createInstance();
-  dioInstance.options.baseUrl = "https://imdb8.p.rapidapi.com/auto-complete?q=game%20of%20thr";
+  dioInstance.options.baseUrl =
+      "https://imdb8.p.rapidapi.com/auto-complete?q=game%20of%20thr";
   return dioInstance;
 }
-

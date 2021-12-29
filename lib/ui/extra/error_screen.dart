@@ -7,14 +7,16 @@ class ErrorScreen extends StatelessWidget {
   final double fontSize;
   final double gap;
   final Widget retryButton;
+  final IconData iconNetwork;
 
   const ErrorScreen(
       {Key key,
       this.gap = 10,
       this.retryButton,
-      this.message="",
+      this.message = "",
       this.fontSize = 14,
       this.retry,
+      this.iconNetwork,
       this.textColor})
       : super(key: key);
 
@@ -25,10 +27,10 @@ class ErrorScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(iconNetwork),
             Text(
               message,
-              style: TextStyle(
-                  fontSize: 12, color: textColor ?? Colors.black),
+              style: TextStyle(fontSize: 12, color: textColor ?? Colors.black),
             ),
             retry != null
                 ? Column(
@@ -39,8 +41,7 @@ class ErrorScreen extends StatelessWidget {
                       retryButton ??
                           IconButton(
                             onPressed: () {
-                              if(retry!=null)
-                                retry();
+                              if (retry != null) retry();
                             },
                             icon: Icon(Icons.refresh_sharp),
                           ),

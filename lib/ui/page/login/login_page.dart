@@ -1,13 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:majootestcase/bloc/auth_bloc/auth_bloc_cubit.dart';
 import 'package:majootestcase/bloc/home_bloc/home_bloc_cubit.dart';
+import 'package:majootestcase/bloc/home_bloc/home_event.dart';
+import 'package:majootestcase/bloc/login_bloc/login_bloc.dart';
+import 'package:majootestcase/bloc/login_bloc/login_event.dart';
+import 'package:majootestcase/bloc/login_bloc/login_state.dart';
 import 'package:majootestcase/common/widget/custom_button.dart';
 import 'package:majootestcase/common/widget/text_form_field.dart';
+import 'package:majootestcase/data/controller/api_service.dart';
 import 'package:majootestcase/models/user.dart';
-import 'package:majootestcase/ui/home_bloc/home_bloc_screen.dart';
-
-
+import 'package:majootestcase/ui/page/home_bloc/home_bloc_screen.dart';
+import 'package:majootestcase/ui/page/register/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,8 +23,10 @@ class _LoginState extends State<LoginPage> {
   final _emailController = TextController();
   final _passwordController = TextController();
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+  GlobalKey<FormState> scaffoldKey = new GlobalKey<FormState>();
 
   bool _isObscurePassword = true;
+  var authBlocCubit = LoginBloc();
 
   @override
   void initState() {
@@ -29,18 +36,24 @@ class _LoginState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthBlocCubit, AuthBlocState>(
+      body: BlocListener<LoginBloc, LoginBlocState>(
+        bloc: authBlocCubit,
         listener: (context, state) {
-          if(state is AuthBlocLoggedInState){
+          if (state is LoginBlocSuccessState) {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider(
-                  create: (context) => HomeBlocCubit()..fetching_data(),
+                  create: (context) => HomeBlocCubit(apiServices)
+                    ..add(HomeLoadedEvent(data: state.data)),
                   child: HomeBlocScreen(),
                 ),
               ),
             );
+          }
+          if (state is LoginBlocErrorState) {
+            Scaffold.of(context)
+                .showSnackBar(SnackBar(content: Text("Gagal Login")));
           }
         },
         child: SingleChildScrollView(
@@ -55,7 +68,6 @@ class _LoginState extends State<LoginPage> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    // color: colorBlue,
                   ),
                 ),
                 Text(
@@ -101,9 +113,17 @@ class _LoginState extends State<LoginPage> {
             hint: 'Example@123.com',
             label: 'Email',
             validator: (val) {
-              final pattern = new RegExp(r'([\d\w]{1,}@[\w\d]{1,}\.[\w]{1,})');
-              if (val != null)
-                return pattern.hasMatch(val) ? null : 'email is invalid';
+              if (val.isNotEmpty || val != null) {
+                if (RegExp(
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    .hasMatch(val)) {
+                  return null;
+                } else {
+                  return "Masukkan e-mail yang valid";
+                }
+              } else {
+                return null;
+              }
             },
           ),
           CustomTextFormField(
@@ -135,7 +155,8 @@ class _LoginState extends State<LoginPage> {
       alignment: Alignment.center,
       child: TextButton(
         onPressed: () async {
-
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => RegisterPage()));
         },
         child: RichText(
           text: TextSpan(
@@ -156,15 +177,12 @@ class _LoginState extends State<LoginPage> {
     final _password = _passwordController.value;
     if (formKey.currentState?.validate() == true &&
         _email != null &&
-        _password != null
-       ) {
+        _password != null) {
+      User user = User(email: _email, password: _password);
 
-      AuthBlocCubit authBlocCubit = AuthBlocCubit();
-      User user = User(
-          email: _email,
-          password: _password,
-      );
-      authBlocCubit.login_user(user);
+      authBlocCubit..add(LoginSignEvent(user: user));
+    } else {
+      SnackBar(content: Text("Gagal Login"));
     }
   }
 }

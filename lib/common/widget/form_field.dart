@@ -12,21 +12,21 @@ abstract class CustomFormField<T> extends FormField<T> {
     this.controller,
     T initialValue,
     FormFieldBuilder<T> builder,
-     FormFieldValidator<T> validator,
+    FormFieldValidator<T> validator,
     FormFieldSetter<T> onSaved,
     bool enabled = true,
     bool autoValidate = false,
     Key key,
   }) : super(
-      initialValue: controller != null ? controller.value : initialValue,
-      builder: builder,
-      validator: validator,
-      onSaved: onSaved,
-      autovalidateMode: autoValidate
-          ? AutovalidateMode.always
-          : AutovalidateMode.disabled,
-      enabled: enabled,
-      key: key);
+            initialValue: controller != null ? controller.value : initialValue,
+            builder: builder,
+            validator: validator,
+            onSaved: onSaved,
+            autovalidateMode: autoValidate
+                ? AutovalidateMode.always
+                : AutovalidateMode.disabled,
+            enabled: enabled,
+            key: key);
 
   @override
   FormFieldState<T> createState() => CustomFormFieldState<T>();

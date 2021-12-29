@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
 import 'form_field.dart';
 
 class CustomTextFormField extends CustomFormField<String> {
@@ -43,7 +42,7 @@ class CustomTextFormField extends CustomFormField<String> {
           },
           validator: (picker) {
             if (mandatory && (picker == null || picker.isEmpty)) {
-              return 'this field is required';
+              return 'Form tidak boleh kosong mohon cek kembali data yang anda inputkan.';
             }
             if (validator != null) {
               return validator(picker);
@@ -77,7 +76,7 @@ class _CustomTextForm extends StatefulWidget {
   final Widget suffixIcon;
 
   const _CustomTextForm({
-     this.state,
+    this.state,
     this.controller,
     this.label,
     this.hint,
@@ -146,11 +145,11 @@ class _CustomTextFormState extends State<_CustomTextForm> {
                   _label != null
                       ? Text(_label, style: TextStyle(fontSize: 12))
                       : SizedBox.shrink(),
-                  SizedBox(height: 3),
+                  SizedBox(height: 1),
                   Stack(
                     children: <Widget>[
                       if (widget.controller?.textController == null ||
-                          widget.controller?.textController.text.isEmpty ==
+                          widget.controller.textController.text.isEmpty ==
                               true)
                         Positioned(
                             top: _label != null
@@ -168,19 +167,19 @@ class _CustomTextFormState extends State<_CustomTextForm> {
                               ),
                             )),
                       Container(
+                        height: 60,
                         padding:
                             EdgeInsets.symmetric(vertical: 3, horizontal: 8),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: TextField(
+                        child: TextFormField(
                           textInputAction: widget.textInputAction,
                           keyboardType: keyboardType,
                           inputFormatters: inputFormatters,
                           focusNode: _focusNode,
-                          textAlignVertical:
-                              _label == null ? TextAlignVertical.center : null,
+                          textAlignVertical: TextAlignVertical.center,
                           controller: widget.controller?.textController,
                           decoration: defaultInputDecoration.copyWith(
                               border: InputBorder.none,
@@ -195,13 +194,13 @@ class _CustomTextFormState extends State<_CustomTextForm> {
                               alignLabelWithHint: true,
                               suffixIcon: _focusNode.hasFocus
                                   ? widget.suffixIcon ??
-                                  IconButton(
-                                    icon: const Icon(Icons.cancel),
-                                    onPressed: () {
-                                      widget.controller?.textController
-                                          .clear();
-                                    },
-                                  )
+                                      IconButton(
+                                        icon: const Icon(Icons.cancel),
+                                        onPressed: () {
+                                          widget.controller.textController
+                                              .clear();
+                                        },
+                                      )
                                   : null),
                           obscureText: widget.isObscureText,
                         ),
