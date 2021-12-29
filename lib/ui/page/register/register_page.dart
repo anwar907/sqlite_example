@@ -15,7 +15,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
+  bool _isObscurePassword = true;
   TextController _password = TextController();
   TextController _email = TextController();
   TextController _username = TextController();
@@ -77,6 +77,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     CustomTextFormField(
                       label: 'Password',
                       controller: _password,
+                      isObscureText: _isObscurePassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isObscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isObscurePassword = !_isObscurePassword;
+                          });
+                        },
+                      ),
                     ),
                   ],
                 )),

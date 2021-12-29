@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:majootestcase/bloc/register_bloc/register_event.dart';
 import 'package:majootestcase/bloc/register_bloc/register_state.dart';
@@ -19,9 +17,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterBlocState> {
       var user = User(
           email: event.email, password: event.password, userName: event.nama);
       var db = DatabaseHelper();
-      log("cekcekcek >$user");
       db.saveUser(user);
-      
+
       yield RegisterBlocSuccessState();
     }
   }

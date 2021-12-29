@@ -14,10 +14,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginBlocState> {
       yield LoginBlocInitialState();
     } else if (event is LoginSignEvent) {
       ApiServices apiServices = ApiServices();
-      await apiServices.login(event.user.email, event.user.password);
-      yield LoginBlocSuccessState();
-    } else {
-      yield LoginBlocErrorState(message: "Login Failure");
+      var data = await apiServices.login(event.user.email, event.user.password);
+      if (data == null) {
+        yield LoginBlocErrorState(message: "Login gagal");
+      } else {
+        yield LoginBlocSuccessState();
+      }
     }
   }
 }

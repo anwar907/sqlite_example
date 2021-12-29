@@ -1,5 +1,4 @@
-import 'dart:developer';
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:majootestcase/models/user.dart';
 import 'package:path/path.dart';
@@ -29,50 +28,34 @@ class DatabaseHelper {
   DatabaseHelper.internal();
 
   initDb() async {
-    Directory directoryDocument = await getApplicationDocumentsDirectory();
+    io.Directory directoryDocument = await getApplicationDocumentsDirectory();
     String path = join(directoryDocument.path, "user.db");
     var locationDb = await openDatabase(path, version: 1, onCreate: _onCreate);
-
     return locationDb;
   }
 
+  //create table when new data do insert
   void _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE User(id INTEGER PRIMARY KEY, email TEXT, username TEXT, password TEXT)");
-    log("Table is created");
+        "CREATE TABLE User(id INTEGER PRIMARY KEY, email VARCHAR, username TEXT, password TEXT)");
   }
 
   //insertion
   Future<int> saveUser(User user) async {
     var dbClient = await db;
-    log(user.userName);
-    int res = await dbClient.insert('User', user.toJson());
-    List<Map> list = await dbClient.rawQuery('SELECT * FROM User');
-    log("Get data all user >>$list");
+    int res = await dbClient.insert('$tabelUser', user.toJson());
     return res;
   }
 
-  Future<int> deleteuser(User user) async {
+  //validate user akun
+  Future<User> selectUser(String email, String password) async {
     var dbClient = await db;
-    int res = await dbClient.delete("User");
-    return res;
-  }
-
-  Future<User> selectUser(User user) async {
-    log("Select User");
-    log(user.password);
-    var dbClient = await db;
-
-    List<Map> maps = await dbClient.query(tabelUser,
-        columns: [columnEmail, columnPassword],
-        where: "$columnEmail = ? and $columnPassword = ?",
-        whereArgs: [user.email, user.password]);
-    log("DATA USER $maps");
-    if (maps.length > 0) {
-      log("User Exits !!");
-      return user;
-    } else {
-      return null;
+    var res = await dbClient.rawQuery("SELECT * FROM $tabelUser WHERE "
+        "$columnEmail = '$email' AND "
+        "$columnPassword = '$password' ");
+    if (res.length > 0) {
+      return User.fromJson(res.first);
     }
+    return null;
   }
 }

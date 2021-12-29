@@ -14,8 +14,6 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  List<Series> series;
-  int availableBtn;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +41,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           child: widget.data[index].series != null
                               ? Icon(
                                   Icons.local_movies_rounded,
-                                  color: Colors.black,
+                                  color: Colors.green,
                                 )
                               : Icon(Icons.local_movies_rounded),
                         ),

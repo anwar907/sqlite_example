@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:majootestcase/bloc/home_bloc/home_bloc_cubit.dart';
 import 'package:majootestcase/bloc/home_bloc/home_bloc_state.dart';
 import 'package:majootestcase/data/controller/api_service.dart';
+import 'package:majootestcase/data/helper/error_helper.dart';
 import 'package:majootestcase/ui/extra/error_screen.dart';
 import 'package:majootestcase/ui/extra/loading.dart';
 
@@ -18,7 +17,6 @@ class HomeBlocScreen extends StatelessWidget {
     return BlocBuilder<HomeBlocCubit, HomeBlocState>(
       bloc: BlocProvider.of<HomeBlocCubit>(context),
       builder: (context, state) {
-        log("APA NIH >>$state");
         if (state is HomeBlocLoadedState) {
           if (state.data != null) {
             return HomeBlocLoadedScreen(data: [state.data]);
@@ -28,9 +26,8 @@ class HomeBlocScreen extends StatelessWidget {
               retry: () {},
               retryButton: ElevatedButton(
                   onPressed: () async {
-                    HomeBlocCubit(apiServices)..apiServices.getMovieList();
                     var data = await apiServices.getMovieList();
-                    return HomeBlocLoadedState(data);
+                    return ErrorHelper.getErrorMessage(data);
                   },
                   child: Text("Refresh ")),
             );

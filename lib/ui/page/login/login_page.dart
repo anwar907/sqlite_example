@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:majootestcase/bloc/home_bloc/home_bloc_cubit.dart';
@@ -40,7 +38,7 @@ class _LoginState extends State<LoginPage> {
         bloc: authBlocCubit,
         listener: (context, state) {
           if (state is LoginBlocSuccessState) {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider(
@@ -53,7 +51,7 @@ class _LoginState extends State<LoginPage> {
           }
           if (state is LoginBlocErrorState) {
             Scaffold.of(context)
-                .showSnackBar(SnackBar(content: Text("Gagal Login")));
+                .showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: SingleChildScrollView(

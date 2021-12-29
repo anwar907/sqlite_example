@@ -10,7 +10,7 @@ void main() {
     // data.email = "anwar@mail.com";
     // data.password = '1234567';
     var result = DatabaseHelper();
-    var value = await result.selectUser(data);
-    print(value);
+    var value = await result.selectUser(data.email, data.password);
+    print(value.email);
   });
 }
